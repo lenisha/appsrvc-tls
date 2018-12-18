@@ -2,14 +2,14 @@
 
 ## Java application
 
-- Upload public certificate to App Service SSL Settings
-
-- Certificate trust stores are set Java applications using settings such as
+Certificate trust stores are set Java applications using settings such as
 
 ```java
 -Djavax.net.ssl.trustStore=/path/to/store
 -Djavax.net.ssl.trustStoreType=JKS|PKCS12|Windows-MY|Windows-ROOT
 ``` 
+
+Steps to make TLS connection work by adding Trusted certificates:
 
 - In App Service Environment (Windows) upload certificate in the `WebApp > SSL Settings > Public certificate`
 and set Java application to use `Windows-ROOT` windows certificate store. Add `JAVA_OPS` environment variable to set this setting for Java process
