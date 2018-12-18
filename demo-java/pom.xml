@@ -61,7 +61,7 @@
 					</authentication>
 					<!-- Web App information testjndiapp2 -->
 					<resourceGroup>tlstest</resourceGroup>
-					<appName>tlsdemo2</appName>
+					<appName>tlsdemo-app</appName>
 
 					<!-- Java Runtime Stack for Web App on Windows-->
 					<javaVersion>1.8.0_181</javaVersion>
@@ -94,6 +94,7 @@
 								<include>*.war</include>
 							</includes>
 						</resource>
+
 					</resources>
 				</configuration>
 			</plugin>

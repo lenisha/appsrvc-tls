@@ -38,14 +38,13 @@ public class DemoApplication extends SpringBootServletInitializer {
 		//System.setProperty("javax.net.ssl.trustStoreType","Windows-MY");
 		ResponseEntity<String> response = restTemplate.exchange("https://consul.altostratus.me/demo/hello",HttpMethod.GET,null,String.class);
 
-		String ip ="";
-		try(final DatagramSocket socket = new DatagramSocket()){
-			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-			ip = socket.getLocalAddress().getHostAddress();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "Invoked on host:" + ip + " and received payload: " + response.toString();
+        String ip = null;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Invoked on host:" + ip + " and received payload: " + response.toString();
 	}
 
 
