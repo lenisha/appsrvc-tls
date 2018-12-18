@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --exit",
     "build": "npm install",
-    "start": "node app.js"
+    "start": "ENV NODE_EXTRA_CA_CERTS=./server-ca.cer node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "chai": "^4.2.0",
     "expect.js": "^0.3.1",
     "express": "^4.16.4",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "request": "^2.88.0"
   }
 }
