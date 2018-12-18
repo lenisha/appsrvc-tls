@@ -60,11 +60,8 @@
 						<serverId>azure-auth</serverId>
 					</authentication>
 					<!-- Web App information testjndiapp2 -->
-					<resourceGroup>consul-demo</resourceGroup>
-					<appName>consul-spring-app</appName>
-					<!-- <region> and <pricingTier> are optional. They will be used to create new Web App if the specified Web App doesn't exist -->
-					<region>canadacentral</region>
-					<pricingTier>S1</pricingTier>
+					<resourceGroup>tlstest</resourceGroup>
+					<appName>tlsdemo-app3</appName>
 
 					<!-- Java Runtime Stack for Web App on Windows-->
 					<javaVersion>1.8.0_181</javaVersion>
@@ -79,7 +76,7 @@
 						</property>
 						<property>
 							<name>JAVA_OPTS</name>
-							<value>-Djavax.net.ssl.trustStoreType=Windows-MY</value>
+							<value>-Djavax.net.ssl.trustStoreType=Windows-ROOT</value>
 						</property>
 
 						<!-- Add APPLICATION_INSIGHTS_IKEY - Instrumentation key-->

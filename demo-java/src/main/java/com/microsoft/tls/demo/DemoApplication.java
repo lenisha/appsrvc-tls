@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 @SpringBootApplication
 @RestController
 public class DemoApplication extends SpringBootServletInitializer {
@@ -32,7 +37,15 @@ public class DemoApplication extends SpringBootServletInitializer {
 		//System.setProperty("javax.net.ssl.trustStore","NUL");
 		//System.setProperty("javax.net.ssl.trustStoreType","Windows-MY");
 		ResponseEntity<String> response = restTemplate.exchange("https://consul.altostratus.me/demo/hello",HttpMethod.GET,null,String.class);
-		return "Invoked and received payload: " + response.toString();
+
+		String ip ="";
+		try(final DatagramSocket socket = new DatagramSocket()){
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			ip = socket.getLocalAddress().getHostAddress();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "Invoked on host:" + ip + " and received payload: " + response.toString();
 	}
 
 
