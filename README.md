@@ -34,7 +34,38 @@ mvn clean package azure-webapp:deploy
 ## Node Application
 `demo-node` - sample express NodeJS application communicating to HTTPS api with self signed server certificate
 
-Node allows application to extend it's default certificate store by providing `NODE_EXTRA_CA_CERTS` env variable
+### TLS connection with Trusted certificates from Windows Store:
+
+To enable node reading Windows cert store instead of environment variable, use `win-ca` module https://github.com/ukoloff/win-ca, it relies internally on native `crypto32.dll` api to fetch Root CAs from Windows' store (Trusted Root Certification Authorities) and make them available to Node.js application with minimal efforts.
+
+include in application code
+
+```
+let ca = require('win-ca')
+```
+
+Certificates will be deduplicated and installed to https.globalAgent.options.ca so they are automatically used for all requests with Node.js' https module. (you could see them as well in node-modules\win-ca\pem)
+
+
+To run Node.JS on Azure AppService:
+
+- As per [ASE docs](https://docs.microsoft.com/en-us/azure/app-service/environment/certificates#private-client-certificate) 
+set `WEBSITE_LOAD_ROOT_CERTIFICATES` Application Setting variable to comma delimited list of certificate thumbprints
+
+- Set Application Settings variable `WEBSITE_NODE_DEFAULT_VERSION` to required NodeJs version (run `az webapp list runtimes` to see supported versions)
+
+- Important! Set Platform to ***`64bit`***
+
+- Upload application zip along (not including `node_modules`) via Kudu https://scm.site/ZipDeployUI  or connecting to git
+- Start the app
+
+- Resulting deployment should be able to establish communication
+![app settings](https://github.com/lenisha/appsrvc-tls/raw/master/demo-node/node-settings-64.png "App Settings")
+
+
+## TLS connection using path to certificate file
+Node also allows application to extend it's default certificate store by providing `NODE_EXTRA_CA_CERTS` env variable
+
 
 ```sh
 NODE_EXTRA_CA_CERTS=/path/to/pem
@@ -45,12 +76,9 @@ or in `package.json`
    "start": "ENV NODE_EXTRA_CA_CERTS=/path/to/pem node app.js"
 ```
 
-To run Node.JS on Azure AppService:
+To run Node.JS on Azure AppService with tls setting:
 
-- Set Application Settings variable `WEBSITE_NODE_DEFAULT_VERSION` to required NodeJs version (run `az webapp list runtimes` to see supported versions)
-- Upload application zip along with the cert (not including `node_modules`) via Kudu https://scm.site/ZipDeployUI  or connecting to git
 - Set Application Settings variable `NODE_EXTRA_CA_CERTS` with absolute path to certificate (e.g D:\home\site\wwwroot\server-ca.cer)
-- Start the app
 
 - Resulting deployment should be able to establish communication
 ![app settings](https://github.com/lenisha/appsrvc-tls/raw/master/demo-node/node-settings.png "App Settings")
@@ -59,12 +87,6 @@ Notes:
 Node application on Azure App Service is hosted using `iisnode` httpModule, with most of configuration setup in `web.config`
 [Kudu magic for iisnode](https://blog.lifeishao.com/2017/03/24/custom-nodejs-deployment-on-azure-web-app/)
 
-### TLS connection with Trusted certificates from Windows Store:
-
-To enable node reading Windows cert store instead of environment variable, investigated `win-ca` module, 
-but it currently fails running on AppService,as it relies internally on native `crypto32.dll` api (looks like sandboxed)
-
-There are additional modules that do it through running powershell or .net code but are still hacks!
 
 ### List certificates in App Service
 Open Powershell in Kudu

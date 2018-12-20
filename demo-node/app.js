@@ -2,6 +2,8 @@ var express = require('express');
 var request = require("request");
 let ca = require('win-ca')
 
+console.log("process arch:" + process.arch);
+
 var app = express();
 app.get('/', function (req, res) {
   
